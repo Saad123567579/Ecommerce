@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 import Login from "./Login";
 import Signup from "./Signup";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import Productview from "./features/productlist/Productview";
 function App() {
   return (
     <>
@@ -17,6 +17,12 @@ function App() {
             <Route path="/" element={<Productlist />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/view" element={<Productview />} />
+
+          
+          
+          
+
           </Routes>
         </div>
       </BrowserRouter>

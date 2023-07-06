@@ -1,23 +1,26 @@
+//productslice.js
+
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchCount } from './counterAPI';
+import { fetchallProducts } from './ProductlistAPI';
 
 const initialState = {
-  value: 0,
+  products: [],
   status: 'idle',
 };
 
 
-export const incrementAsync = createAsyncThunk(
-  'counter/fetchCount',
-  async (amount) => {
-    const response = await fetchCount(amount);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+export const fetchAllProductsAsync = createAsyncThunk(
+  'product/fetchProducts',
+  async () => {
+    const response = await fetchallProducts();
+    console.log(response);
+    return response;
   }
 );
 
-export const counterSlice = createSlice({
-  name: 'counter',
+export  const productSlice = createSlice({
+  name: 'product',
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -30,25 +33,26 @@ export const counterSlice = createSlice({
   
   extraReducers: (builder) => {
     builder
-      .addCase(incrementAsync.pending, (state) => {
+      .addCase(fetchAllProductsAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(incrementAsync.fulfilled, (state, action) => {
+      .addCase(fetchAllProductsAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.value += action.payload;
+        state.products = state.products.concat(action.payload);
+
       });
   },
 });
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+// export const { increment, decrement, incrementByAmount } = productSlice.actions;
+export default productSlice.reducer;
 
-export const selectCount = (state) => state.counter.value;
+// export const selectCount = (state) => state.counter.value;
 
-export const incrementIfOdd = (amount) => (dispatch, getState) => {
-  const currentValue = selectCount(getState());
-  if (currentValue % 2 === 1) {
-    dispatch(incrementByAmount(amount));
-  }
-};
+// export const incrementIfOdd = (amount) => (dispatch, getState) => {
+//   const currentValue = selectCount(getState());
+//   if (currentValue % 2 === 1) {
+//     dispatch(incrementByAmount(amount));
+//   }
+// };
 
-export default counterSlice.reducer;

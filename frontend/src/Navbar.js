@@ -1,11 +1,13 @@
-import { Fragment } from "react";
+//navbar.js
+
+import { Fragment,useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
   ShoppingCartIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-
+import Cart from "./features/cart/Cart";
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
   { name: "Team", href: "#", current: false },
@@ -17,7 +19,12 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function Navbar() {
+  const [visibility,setvisibility] = useState(false);
+  const handleClick= () => {
+    setvisibility(true);
+  }
   return (
+    <>
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
@@ -74,7 +81,7 @@ export default function Navbar() {
                 >
                   <span className="sr-only">View notifications</span>
                   <div className="relative">
-                    <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
+                    <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" onClick={handleClick} />
                     <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
                      1
                     </div>
@@ -172,5 +179,6 @@ export default function Navbar() {
         </>
       )}
     </Disclosure>
-  );
+<Cart  visibility={visibility} setvisibility={setvisibility} />
+    </>  );
 }
