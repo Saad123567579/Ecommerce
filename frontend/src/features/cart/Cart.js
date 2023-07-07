@@ -16,7 +16,6 @@ export default function Cart(props) {
   products = JSON.parse(localStorage.getItem("cartItems")).items;
   useEffect(() => {
     products = JSON.parse(localStorage.getItem("cartItems")).items;
-    console.log("Your Cart Is : ", products);
    
   }, [val]);
 
@@ -48,10 +47,8 @@ export default function Cart(props) {
       }
       
     }
-    console.log("index:",items[index]);
     if (index !== -1) {
       items[index].quantity = items[index].quantity + 1; // Increment the quantity of the item
-      console.log(data);
     }
   
     localStorage.setItem("cartItems", JSON.stringify(data)); // Store the updated data back to localStorage
@@ -71,10 +68,8 @@ export default function Cart(props) {
       }
       
     }
-    console.log("index:",items[index]);
     if (index !== -1) {
       items[index].quantity = items[index].quantity - 1; // Increment the quantity of the item
-      console.log(data);
     }
   
     localStorage.setItem("cartItems", JSON.stringify(data)); // Store the updated data back to localStorage
