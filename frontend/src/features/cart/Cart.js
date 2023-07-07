@@ -11,53 +11,12 @@ export default function Cart(props) {
   const dispatch = useDispatch();
   let val = useSelector((state) => state.product.flag);
 
-<<<<<<< HEAD
   let products = [];
 
   products = JSON.parse(localStorage.getItem("cartItems")).items;
   useEffect(() => {
     products = JSON.parse(localStorage.getItem("cartItems")).items;
     console.log("Your Cart Is : ", products);
-=======
-import React from 'react'
-import { Fragment, useState ,useEffect} from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import {Link } from "react-router-dom";
-  export default function Cart(props) {
-    // Parse the string back to an object
-    let products=[];
-   
-      products = JSON.parse(localStorage.getItem("cartItems")).items;
-      useEffect(() => {
-      products = JSON.parse(localStorage.getItem("cartItems")).items;
-
-      
-        
-      }, [products])
-      
-    
-
-    const handleClick = () => {
-        props.setvisibility(false);
-    }
-    const handleRemoveClick = (event) => {
-      let id = event.target.getAttribute('id') ;
-      let ls = JSON.parse(localStorage.getItem("cartItems"));
-      let items = ls.items;
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].id == id) {
-          items.splice(i, 1);
-          break; // Exit the loop after removing the element
-        }
-      }
-      let newCart = { "items": items };
-      localStorage.setItem("cartItems", JSON.stringify(newCart));
-      console.log(id);
-    }
- 
-   
->>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
    
   }, [val]);
 
@@ -186,7 +145,6 @@ import {Link } from "react-router-dom";
                             </svg>
                           </button>
                         </div>
-<<<<<<< HEAD
                       </div>
 
                       <div className="mt-8">
@@ -260,78 +218,6 @@ import {Link } from "react-router-dom";
                             )}
                           </ul>
                         </div>
-=======
-  
-                        <div className="mt-8">
-                          <div className="flow-root">
-                            <ul role="list" className="-my-6 divide-y divide-gray-200">
-
-                            {products.length!=0 ? (
-  products.map((product) => (
-    <li key={product.id} className="flex py-6">
-      <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-        <img
-          src={product.image}
-          alt="No Image Available"
-          className="h-full w-full object-cover object-center"
-        />
-      </div>
-
-      <div className="ml-4 flex flex-1 flex-col">
-        <div>
-          <div className="flex justify-between text-base font-medium text-gray-900">
-            <h3>
-              <Link to={`/product/${product.id-1}`}>{product.title}</Link>
-            </h3>
-            <p className="ml-4">${product.price}</p>
-          </div>
-        </div>
-        <div className="flex flex-1 items-end justify-between text-sm">
-          <p className="text-gray-500">Qty {product.quantity}</p>
-          <div className="flex">
-            <button
-              type="button"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-              id = {product.id}
-              onClick = {handleRemoveClick}
-            >
-              Remove
-            </button>
-          </div>
-        </div>
-      </div>
-    </li>
-  ))
-) : (
-  <h3>Empty</h3>
-)}
-
-                              
-
-
-
-
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-  
-                      <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
-                        <div className="flex justify-between text-base font-medium text-gray-900">
-                          <p>Subtotal</p>
-                          <p>$262.00</p>
-                        </div>
-                        <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                        <div className="mt-6">
-                          <a
-                            href="#"
-                            className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                          >
-                            Checkout
-                          </a>
-                        </div>
-                        
->>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
                       </div>
                     </div>
 

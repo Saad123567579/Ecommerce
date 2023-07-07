@@ -23,15 +23,13 @@ function classNames(...classes) {
 }
 export default function Navbar() {
   let products = JSON.parse(localStorage.getItem("cartItems")).items;
-<<<<<<< HEAD
   let val = useSelector(state=>state.product.flag);
   useEffect(() => {
     products = JSON.parse(localStorage.getItem("cartItems")).items;
     
   }, [val]);
-=======
 
->>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
+
   const str=" ";
   const [visibility,setvisibility] = useState(false);
   const handleClick= () => {

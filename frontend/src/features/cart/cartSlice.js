@@ -4,12 +4,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   value: 0,
-<<<<<<< HEAD
+
   cart:localStorage.getItem("cartItem")?JSON.parse(localStorage.getItem("cartItem")).items:localStorage.setItem("cartItem",JSON.stringify({"item":[]}))
   
-=======
-  cart:[]
->>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
 
 
   
