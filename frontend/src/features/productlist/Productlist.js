@@ -4,6 +4,7 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import { fetchAllProductsAsync } from './Productlistslice';
+import {Link} from "react-router-dom";
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
@@ -71,10 +72,30 @@ export default function Productlist() {
         },
       ]
       
+      const handleClick = (event) => {
+        let index = parseInt(event.target.getAttribute('id')); // Parse the string to an integer
+        let p = products[index - 1];
+        console.log(p);
+        let existingCartItems = JSON.parse(localStorage.getItem('cartItems'));
+        let newItem = { id: p.id, title: p.title, price: p.price ,quantity:1,image:p.thumbnail};
+      
+        // Check if the new item already exists in the items array
+        if (existingCartItems.items.some(item => item.id === newItem.id)) {
+          return; // If the item exists, exit the function to avoid duplicates
+        }
+      
+        existingCartItems.items.push(newItem);
+        let updatedArrayString = JSON.stringify(existingCartItems);
+        localStorage.setItem('cartItems', updatedArrayString);
+        console.log(JSON.parse(localStorage.getItem('cartItems')));
+      };
+      
+
+      
       
 
     return (
-      <div className="bg-white">
+      <div className="bg-warmGray-300">
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -302,64 +323,81 @@ export default function Productlist() {
 
               {/* Product grid */}
               <div className="lg:col-span-3">{/* Your content my content starts here*/}
-              <div className="bg-white">
-<div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-  <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2>
+              <div className="bg-warmGray-500">
+<div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 bg-warmGray-300">
+  <h2 className="text-2xl font-bold tracking-tight text-gray-900">Browse Our Products</h2>
 
-  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
   {products.map((product) => (
-  <div key={product.id} className="group relative">
-    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+  <div key={product.id} className="max-w-xs mx-auto mb-8 bg-white rounded-md overflow-hidden shadow-lg">
+    <div className="relative">
       <img
-      src={product.thumbnail}
-        onMouseEnter={(event)=>{ event.target.setAttribute('src',`${product.images[0]}`) }}
-        onMouseLeave={(event)=>{ event.target.setAttribute('src',`${product.thumbnail}`) }}
-
-         // Displayed image
+        src={product.images[0]}
         alt={product.title}
-        className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-      
+        className="object-cover w-full h-64 sm:h-48 md:h-64 lg:h-56 xl:h-64"
       />
-      
+      <div className="absolute top-0 right-0 bg-blue-500 text-white py-1 px-3 m-2 rounded-full">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 1l2.928 6.856 6.072.442-4.64 4.49 1.1 6.067L10 15.464l-5.46 2.29 1.1-6.067L1 8.298l6.072-.443L10 1z"
+            clipRule="evenodd"
+          />
+        </svg>
+        {product.rating}
+      </div>
     </div>
-    <div className="mt-4 flex justify-between">
-      <div>
-        <h3 className="text-sm text-gray-700">
-          <a href={product.href}>
-            <span aria-hidden="true" className="absolute inset-0 cursor-pointer" />
-            {product.title}
-          </a>
-        </h3>
-        <div className="flex items-center mt-1">
-          <span className="text-sm text-yellow-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 mr-1"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 1l2.928 6.856 6.072.442-4.64 4.49 1.1 6.067L10 15.464l-5.46 2.29 1.1-6.067L1 8.298l6.072-.443L10 1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            {product.rating}
-          </span>
-          <span className="text-sm text-gray-500 ml-1">
-            ({product.ratingCount})
-          </span>
+    <div className="p-4">
+      <h3 className="text-lg font-semibold text-gray-800">{product.title}</h3>
+      <div className="flex items-center mt-2">
+        <span className="text-sm text-yellow-500">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 1l2.928 6.856 6.072.442-4.64 4.49 1.1 6.067L10 15.464l-5.46 2.29 1.1-6.067L1 8.298l6.072-.443L10 1z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {product.rating}
+        </span>
+      </div>
+      <div className="flex justify-between mt-4">
+        <div className="text-lg font-medium text-gray-900">${product.price}</div>
+        <div className="text-xs text-gray-500 line-through">
+          ${Math.round(product.price + (product.price * product.discountPercentage) / 100)}
         </div>
       </div>
-      <div className="text-sm font-medium">
-        <span className="text-gray-900">${product.price}</span>
-        <span className="ml-1 text-xs text-gray-500 line-through">
-          ${product.price + product.price * (product.discountPercentage / 100)}
-        </span>
+      <div className="flex justify-between mt-4">
+        <button id={`${product.id}`}
+          className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mr-2"
+          onClick = {handleClick}
+        >
+
+          Add to Cart
+        </button>
+        <button
+          className="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded ml-2"
+          
+        >
+          <Link to={`/product/${product.id}`}>View Product</Link>
+        </button>
       </div>
     </div>
   </div>
 ))}
+
+
+
 
   </div>
 </div>

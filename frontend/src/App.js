@@ -1,3 +1,6 @@
+
+//app.js
+
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
@@ -6,8 +9,20 @@ import Navbar from "./Navbar";
 import Login from "./Login";
 import Signup from "./Signup";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
 import Productview from "./features/productlist/Productview";
 function App() {
+  useEffect(() => {
+    const cartItems = localStorage.getItem("cartItems");
+    if (!cartItems) {
+      localStorage.setItem("cartItems", JSON.stringify({ items: [] }));
+    }
+
+    // Clean up function
+    return () => {
+      // Cleanup logic
+    };
+  }, []);
   return (
     <>
       <BrowserRouter>
@@ -17,7 +32,9 @@ function App() {
             <Route path="/" element={<Productlist />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/view" element={<Productview />} />
+            <Route path="/product/:id" element={<Productview />} />
+        
+
 
           
           

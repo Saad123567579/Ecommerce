@@ -19,6 +19,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function Navbar() {
+  let products = JSON.parse(localStorage.getItem("cartItems")).items;
+
+  const str=" ";
   const [visibility,setvisibility] = useState(false);
   const handleClick= () => {
     setvisibility(true);
@@ -82,8 +85,10 @@ export default function Navbar() {
                   <span className="sr-only">View notifications</span>
                   <div className="relative">
                     <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" onClick={handleClick} />
+                    
                     <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
-                     1
+                    {products.length === 0 ? <h3>{str}</h3> : <h3>{products.length}</h3>}
+
                     </div>
                   </div>
                 </button>

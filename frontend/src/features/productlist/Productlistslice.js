@@ -19,6 +19,8 @@ export const fetchAllProductsAsync = createAsyncThunk(
   }
 );
 
+
+
 export  const productSlice = createSlice({
   name: 'product',
   initialState,
@@ -41,6 +43,8 @@ export  const productSlice = createSlice({
         state.products = state.products.concat(action.payload);
 
       });
+      
+      
   },
 });
 

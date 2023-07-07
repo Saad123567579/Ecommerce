@@ -1,10 +1,14 @@
-// import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 // import { fetchCount } from './counterAPI';
+// const cart {cartItems:[]};
 
-// const initialState = {
-//   value: 0,
-//   status: 'idle',
-// };
+const initialState = {
+  value: 0,
+  cart:[]
+
+
+  
+};
 
 
 // export const incrementAsync = createAsyncThunk(
@@ -16,17 +20,25 @@
 //   }
 // );
 
-// export const counterSlice = createSlice({
-//   name: 'counter',
-//   initialState,
-//   // The `reducers` field lets us define reducers and generate associated actions
-//   reducers: {
-//     increment: (state) => {
+export const counterSlice = createSlice({
+  name: 'counter',
+  initialState,
+  // The `reducers` field lets us define reducers and generate associated actions
+  reducers: {
+    addItem: (state) => {
     
-//       state.value += 1;
-//     },
+      state.value += 1;
+    },
+    deleteItem: (state) => {
     
-//   },
+        state.value += 1;
+      },
+    updateItem: (state) => {
+    
+        state.value += 1;
+      },
+    
+  }
   
 //   extraReducers: (builder) => {
 //     builder
@@ -38,9 +50,9 @@
 //         state.value += action.payload;
 //       });
 //   },
-// });
+});
 
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { addItem , deleteItem , updateItem } = counterSlice.actions;
 
 // export const selectCount = (state) => state.counter.value;
 
@@ -51,4 +63,4 @@
 //   }
 // };
 
-// export default counterSlice.reducer;
+export default counterSlice.reducer;
