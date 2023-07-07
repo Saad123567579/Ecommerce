@@ -4,7 +4,7 @@ import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
 import { useParams } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAllProductsAsync } from './Productlistslice';
+import { fetchAllProductsAsync,increment } from './Productlistslice';
 import {Link} from "react-router-dom";
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -24,7 +24,7 @@ export default function Productview() {
   const {title,description,category,images,rating,brand,discountPercentage,price} = product;
   
   const handleClick = () => {
-    
+    dispatch(increment());
     let existingCartItems = JSON.parse(localStorage.getItem('cartItems'));
     let newItem = { id: product.id, title: product.title, price: product.price,quantity:1,image:product.thumbnail };
     if (existingCartItems.items.some(item => item.id === newItem.id)) {

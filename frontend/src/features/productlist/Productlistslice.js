@@ -7,6 +7,7 @@ import { fetchallProducts } from './ProductlistAPI';
 const initialState = {
   products: [],
   status: 'idle',
+  flag:1
 };
 
 
@@ -27,8 +28,10 @@ export  const productSlice = createSlice({
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     increment: (state) => {
-    
-      state.value += 1;
+      if(state.flag>=1000)
+      state.flag=0;
+      else
+      state.flag += 1;
     },
     
   },
@@ -48,7 +51,7 @@ export  const productSlice = createSlice({
   },
 });
 
-// export const { increment, decrement, incrementByAmount } = productSlice.actions;
+export const { increment} = productSlice.actions;
 export default productSlice.reducer;
 
 // export const selectCount = (state) => state.counter.value;

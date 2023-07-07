@@ -8,6 +8,9 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Cart from "./features/cart/Cart";
+import React, { useEffect } from 'react';
+import {useSelector} from 'react-redux';
+
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
   { name: "Team", href: "#", current: false },
@@ -20,7 +23,11 @@ function classNames(...classes) {
 }
 export default function Navbar() {
   let products = JSON.parse(localStorage.getItem("cartItems")).items;
-
+  let val = useSelector(state=>state.product.flag);
+  useEffect(() => {
+    products = JSON.parse(localStorage.getItem("cartItems")).items;
+    
+  }, [val]);
   const str=" ";
   const [visibility,setvisibility] = useState(false);
   const handleClick= () => {
@@ -28,7 +35,7 @@ export default function Navbar() {
   }
   return (
     <>
-    <Disclosure as="nav" className="bg-gray-800">
+    <Disclosure as="nav" className="bg-gray-800 sticky">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
