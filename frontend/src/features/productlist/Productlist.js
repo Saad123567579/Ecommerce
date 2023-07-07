@@ -1,10 +1,18 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+<<<<<<< HEAD
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon, ChevronDownIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import { fetchAllProductsAsync,increment } from './Productlistslice';
 import { Link } from 'react-router-dom';
 
+=======
+import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
+import { fetchAllProductsAsync } from './Productlistslice';
+import {Link} from "react-router-dom";
+>>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
@@ -18,6 +26,7 @@ export default function Productlist() {
     dispatch(fetchAllProductsAsync());
   }, []);
 
+<<<<<<< HEAD
   const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
     { name: 'Best Rating', href: '#', current: false },
@@ -90,6 +99,84 @@ export default function Productlist() {
 
   return (
     <div className="bg-warmGray-300">
+=======
+      const sortOptions = [
+        { name: 'Most Popular', href: '#', current: true },
+        { name: 'Best Rating', href: '#', current: false },
+        { name: 'Newest', href: '#', current: false },
+        { name: 'Price: Low to High', href: '#', current: false },
+        { name: 'Price: High to Low', href: '#', current: false },
+      ]
+      const subCategories = [
+        { name: 'Totes', href: '#' },
+        { name: 'Backpacks', href: '#' },
+        { name: 'Travel Bags', href: '#' },
+        { name: 'Hip Bags', href: '#' },
+        { name: 'Laptop Sleeves', href: '#' },
+      ]
+      const filters = [
+        {
+          id: 'color',
+          name: 'Color',
+          options: [
+            { value: 'white', label: 'White', checked: false },
+            { value: 'beige', label: 'Beige', checked: false },
+            { value: 'blue', label: 'Blue', checked: true },
+            { value: 'brown', label: 'Brown', checked: false },
+            { value: 'green', label: 'Green', checked: false },
+            { value: 'purple', label: 'Purple', checked: false },
+          ],
+        },
+        {
+          id: 'category',
+          name: 'Category',
+          options: [
+            { value: 'new-arrivals', label: 'New Arrivals', checked: false },
+            { value: 'sale', label: 'Sale', checked: false },
+            { value: 'travel', label: 'Travel', checked: true },
+            { value: 'organization', label: 'Organization', checked: false },
+            { value: 'accessories', label: 'Accessories', checked: false },
+          ],
+        },
+        {
+          id: 'size',
+          name: 'Size',
+          options: [
+            { value: '2l', label: '2L', checked: false },
+            { value: '6l', label: '6L', checked: false },
+            { value: '12l', label: '12L', checked: false },
+            { value: '18l', label: '18L', checked: false },
+            { value: '20l', label: '20L', checked: false },
+            { value: '40l', label: '40L', checked: true },
+          ],
+        },
+      ]
+      
+      const handleClick = (event) => {
+        let index = parseInt(event.target.getAttribute('id')); // Parse the string to an integer
+        let p = products[index - 1];
+        console.log(p);
+        let existingCartItems = JSON.parse(localStorage.getItem('cartItems'));
+        let newItem = { id: p.id, title: p.title, price: p.price ,quantity:1,image:p.thumbnail};
+      
+        // Check if the new item already exists in the items array
+        if (existingCartItems.items.some(item => item.id === newItem.id)) {
+          return; // If the item exists, exit the function to avoid duplicates
+        }
+      
+        existingCartItems.items.push(newItem);
+        let updatedArrayString = JSON.stringify(existingCartItems);
+        localStorage.setItem('cartItems', updatedArrayString);
+        console.log(JSON.parse(localStorage.getItem('cartItems')));
+      };
+      
+
+      
+      
+
+    return (
+      <div className="bg-warmGray-300">
+>>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
       <div>
         {/* Mobile filter dialog */}
         <Transition.Root show={mobileFiltersOpen} as={Fragment}>
@@ -349,6 +436,7 @@ export default function Productlist() {
               </form>
 
               {/* Product grid */}
+<<<<<<< HEAD
               <div className="lg:col-span-3">
                 <div className="bg-warmGray-500">
                   <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 bg-warmGray-300">
@@ -356,10 +444,86 @@ export default function Productlist() {
 
                     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
 
+=======
+              <div className="lg:col-span-3">{/* Your content my content starts here*/}
+              <div className="bg-warmGray-500">
+<div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 bg-warmGray-300">
+  <h2 className="text-2xl font-bold tracking-tight text-gray-900">Browse Our Products</h2>
+
+  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+  {products.map((product) => (
+  <div key={product.id} className="max-w-xs mx-auto mb-8 bg-white rounded-md overflow-hidden shadow-lg">
+    <div className="relative">
+      <img
+        src={product.images[0]}
+        alt={product.title}
+        className="object-cover w-full h-64 sm:h-48 md:h-64 lg:h-56 xl:h-64"
+      />
+      <div className="absolute top-0 right-0 bg-blue-500 text-white py-1 px-3 m-2 rounded-full">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fillRule="evenodd"
+            d="M10 1l2.928 6.856 6.072.442-4.64 4.49 1.1 6.067L10 15.464l-5.46 2.29 1.1-6.067L1 8.298l6.072-.443L10 1z"
+            clipRule="evenodd"
+          />
+        </svg>
+        {product.rating}
+      </div>
+    </div>
+    <div className="p-4">
+      <h3 className="text-lg font-semibold text-gray-800">{product.title}</h3>
+      <div className="flex items-center mt-2">
+        <span className="text-sm text-yellow-500">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 mr-1"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 1l2.928 6.856 6.072.442-4.64 4.49 1.1 6.067L10 15.464l-5.46 2.29 1.1-6.067L1 8.298l6.072-.443L10 1z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {product.rating}
+        </span>
+      </div>
+      <div className="flex justify-between mt-4">
+        <div className="text-lg font-medium text-gray-900">${product.price}</div>
+        <div className="text-xs text-gray-500 line-through">
+          ${Math.round(product.price + (product.price * product.discountPercentage) / 100)}
+        </div>
+      </div>
+      <div className="flex justify-between mt-4">
+        <button id={`${product.id}`}
+          className="w-1/2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mr-2"
+          onClick = {handleClick}
+        >
+
+          Add to Cart
+        </button>
+        <button
+          className="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded ml-2"
+          
+        >
+          <Link to={`/product/${product.id}`}>View Product</Link>
+        </button>
+      </div>
+    </div>
+  </div>
+))}
+>>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
 
 
 
 
+<<<<<<< HEAD
                       {products.map((product) => (
                         <div
                           key={product.id-1}
@@ -430,6 +594,12 @@ export default function Productlist() {
                     </div>
                   </div>
                 </div>
+=======
+  </div>
+</div>
+</div>
+              
+>>>>>>> 24744ee3d98f37fb5338c60f1f8e3629828c7880
               </div>
             </div>
           </section>
