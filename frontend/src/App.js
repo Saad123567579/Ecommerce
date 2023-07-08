@@ -11,6 +11,7 @@ import Signup from "./Signup";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useEffect } from "react";
 import Productview from "./features/productlist/Productview";
+import Checkout from "./features/cart/Checkout";
 function App() {
   useEffect(() => {
     const cartItems = localStorage.getItem("cartItems");
@@ -33,6 +34,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/product/:id" element={<Productview />} />
+            <Route path="/checkout" element={<Checkout />} />
+
         
 
 

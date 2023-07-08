@@ -1839,5 +1839,22 @@
         "https://i.dummyjson.com/data/products/100/thumbnail.jpg"
       ]
     }
+  ],
+  "users": [
+    {
+      "username": "saad123",
+      "email": "saady789@gmail.com",
+      "password": "1234",
+      "cpassword": "1234",
+      "id": 1
+    },
+    {
+      "username": "saad123",
+      "email": "saady789@gmail.com",
+      "password": "1234",
+      "cpassword": "1234",
+      "image": "https://blogtimenow.com/wp-content/uploads/2014/06/hide-facebook-profile-picture-notification.jpg",
+      "id": 2
+    }
   ]
 }

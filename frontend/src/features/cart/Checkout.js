@@ -1,13 +1,17 @@
-//cart.js
-import React from "react";
-import { Fragment, useState, useEffect } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-// import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Link ,useNavigate  } from "react-router-dom";
+import React,{useEffect,useState} from 'react';
+import { useForm } from 'react-hook-form';
+import { FaUser, FaEnvelope, FaMapMarkerAlt, FaCreditCard } from 'react-icons/fa';
+import { Link ,useNavigate} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { increment } from "../productlist/Productlistslice";
+const Checkout = () => {
+    const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
 
-export default function Cart(props) {
+  const onSubmit = (data) => {
+    // Handle form submission logic here
+    console.log(data);
+  };
   const dispatch = useDispatch();
   let val = useSelector((state) => state.product.flag);
 
@@ -19,9 +23,9 @@ export default function Cart(props) {
    
   }, [val]);
 
-  const handleClick = () => {
-    props.setvisibility(false);
-  };
+//   const handleClick = () => {
+//     props.setvisibility(false);
+//   };
   const handleRemoveClick = (event) => {
     let id = event.target.getAttribute("id");
     let ls = JSON.parse(localStorage.getItem("cartItems"));
@@ -55,11 +59,6 @@ export default function Cart(props) {
   
     dispatch(increment());
   };
-  const navigate = useNavigate();
-
-  const handleCheckout = () => {
-    navigate("/checkout");
-  }
   
   
   const handleSub = (event) => {
@@ -81,73 +80,81 @@ export default function Cart(props) {
   
     dispatch(increment());
   };
-  const totalPrice = products
+  var totalPrice = products
   .map(item => item.quantity * item.price)
   .reduce((acc, curr) => acc + curr, 0);
+  useEffect(() => {
+    if(totalPrice==0)
+    navigate("/");
+  
+  }, [val])
+  
   
 
+
   return (
-    <Transition.Root show={props.visibility} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={props.setvisibility}>
-        <Transition.Child
-          show={props.visibility}
-          as={Fragment}
-          enter="ease-in-out duration-500"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="ease-in-out duration-500"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-        </Transition.Child>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-2 gap-8">
+        {/* Column 1: Form inputs */}
+        <div>
+          <h2 className="text-2xl font-semibold mb-6">Checkout</h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4">
+              <label htmlFor="email" className="flex items-center">
+                <FaEnvelope className="mr-2" />
+                Email
+              </label>
+              <input type="email" id="email" name="email" {...register('email', { required: true })} className="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full" />
+            </div>
 
-        <div className="fixed inset-0 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-              <Transition.Child
-                as={Fragment}
-                enter="transform transition ease-in-out duration-500 sm:duration-700"
-                enterFrom="translate-x-full"
-                enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-500 sm:duration-700"
-                leaveFrom="translate-x-0"
-                leaveTo="translate-x-full"
-              >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
-                    <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">
-                          Shopping cart
-                        </Dialog.Title>
-                        <div className="ml-3 flex h-7 items-center">
-                          <button
-                            type="button"
-                            className="-m-2 p-2 text-gray-400 hover:text-gray-500"
-                            onClick={() => props.setvisibility(false)}
-                          >
-                            <span className="sr-only">Close panel</span>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              onClick={handleClick}
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="w-6 h-6"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
+            <div className="mb-4">
+              <label htmlFor="name" className="flex items-center">
+                <FaUser className="mr-2" />
+                Name
+              </label>
+              <input type="text" id="name" name="name" {...register('name', { required: true })} className="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full" />
+            </div>
 
-                      <div className="mt-8">
+            <div className="mb-4">
+              <label htmlFor="city" className="flex items-center">
+                <FaMapMarkerAlt className="mr-2" />
+                City
+              </label>
+              <input type="text" id="city" name="city" {...register('city', { required: true })} className="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="address" className="flex items-center">
+                <FaMapMarkerAlt className="mr-2" />
+                Address
+              </label>
+              <textarea id="address" name="address" rows="4" {...register('address', { required: true })} className="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full" />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="payment" className="flex items-center">
+                <FaCreditCard className="mr-2" />
+                Payment Method
+              </label>
+              <select id="payment" name="payment" {...register('payment', { required: true })} className="border border-gray-300 px-3 py-2 mt-1 rounded-md w-full">
+                <option value="">Select payment method</option>
+                <option value="credit-card">Credit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="cash-on-delivery">Cash on Delivery</option>
+              </select>
+            </div>
+
+            <input type="submit" value="Place Order" className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md" />
+          </form>
+        </div>
+
+        {/* Column 2: Product information */}
+        <div>
+          {/* Add your own code or components to display product information here */}
+          {/* Leave space for displaying the products and add your own styling */}
+          {/* You can add a comment like this to indicate where to insert your code */}
+          {/* Add your product display logic here */}
+          <div className="mt-8">
                         <div className="flow-root">
                           <ul
                             role="list"
@@ -204,7 +211,8 @@ export default function Cart(props) {
                                           type="button"
                                           className="font-medium text-indigo-600 hover:text-indigo-500"
                                           id={product.id}
-                                          onClick={handleRemoveClick}
+                                          onClick = {handleRemoveClick}
+                                         
                                         >
                                           Remove
                                         </button>
@@ -218,10 +226,7 @@ export default function Cart(props) {
                             )}
                           </ul>
                         </div>
-                      </div>
-                    </div>
-
-                    <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
+                        <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Subtotal</p>
                         <p>${totalPrice}</p>
@@ -229,22 +234,18 @@ export default function Cart(props) {
                       <p className="mt-0.5 text-sm text-gray-500">
                         Shipping and taxes calculated at checkout.
                       </p>
-                      <div className="mt-6">
-                        <a onClick={handleCheckout}
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                        >
-                          Checkout
-                        </a>
                       </div>
-                    </div>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
+                      </div>
+
+
+
+
+
+
         </div>
-      </Dialog>
-    </Transition.Root>
+      </div>
+    </div>
   );
-}
+};
+
+export default Checkout;
