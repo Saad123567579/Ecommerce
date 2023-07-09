@@ -1,6 +1,41 @@
-import React from 'react'
-
+import React,{useEffect} from 'react'
+import {useNavigate} from "react-router";
+import {Link} from "react-router-dom";
+import { useForm } from "react-hook-form";
+import {useSelector,useDispatch} from "react-redux";
+import { createUserAsync } from "./features/auth/authSlice";
+import { refresh,storeUser ,logger} from './features/auth/authSlice';
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = async(data) => {
+    const response = await fetch("http://localhost:8080/users");
+    const d = await response.json();
+   
+    let flag=0;
+    d.map((p)=>{
+      if(p.username===watch("username") && p.password===watch("password") ) {
+        if(!localStorage.getItem("token")){
+          localStorage.setItem("token",JSON.stringify(watch("username")));
+          console.log("match found");
+          dispatch(logger(1));
+           //save user here
+          dispatch(storeUser(p));
+          navigate("/");
+         
+        }
+      }
+    })
+    dispatch(refresh());
+    
+  } 
     return (
         <>
           
@@ -17,16 +52,21 @@ const Login = () => {
             </div>
     
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form className="space-y-6" action="#" method="POST">
+              <form className="space-y-6" action="#" method="POST" onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                  <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
                     Email address
                   </label>
                   <div className="mt-2">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
+                    <input 
+                      {...register("username", {
+                        required: true,
+                        minLength: 3,
+                        maxLength: 20,
+                      })}
+                      id="username"
+                      name="username"
+                      type="text"
                       autoComplete="email"
                       required
                       className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -47,6 +87,7 @@ const Login = () => {
                   </div>
                   <div className="mt-2">
                     <input
+                     {...register("password", { required: true, minLength: 3 })}
                       id="password"
                       name="password"
                       type="password"
@@ -69,9 +110,9 @@ const Login = () => {
     
               <p className="mt-10 text-center text-sm text-gray-500">
                 Not a member?{' '}
-                <a href="#" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                <Link to="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                  Sign up for free
-                </a>
+                </Link>
               </p>
             </div>
           </div>

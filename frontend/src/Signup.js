@@ -1,26 +1,46 @@
 //Signup.js
-import React from "react";
+import React,{useEffect} from "react";
 import { useForm } from "react-hook-form";
 import {useSelector,useDispatch} from "react-redux";
 import { createUserAsync } from "./features/auth/authSlice";
 import {useNavigate} from "react-router";
+import { refresh,storeUser ,logger} from "./features/auth/authSlice";
 
 const Signup = () => {
-  var val = useSelector(state=>state.user.flag);
+  // var id;
+  // var val = useSelector(state=>state.user.flag);
+  // var status = useSelector((state) => state.user.status);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => { 
+  const onSubmit = async(data) => { 
     data = {...data,"image":"https://blogtimenow.com/wp-content/uploads/2014/06/hide-facebook-profile-picture-notification.jpg"};
-    dispatch(createUserAsync(data));
+    // console.log("BEFORE:",data.username)
+    let name = watch("username");
+    let x = await dispatch(createUserAsync(data));
+    if(x.payload==1){
+      // console.log("AFTER:",name)
+      if(!localStorage.getItem("token")){
+        localStorage.setItem("token",JSON.stringify(name));
+        //save user here
+        dispatch(storeUser(data));
+        dispatch(logger(1));
+        navigate("/");
+      }
+    }
+    dispatch(refresh());
+    }
+   
 
 
-  };
+  
 
   return (
     <>
