@@ -18,15 +18,35 @@ const Profile = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     const { image } = data;
   
+  
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async() => {
       ref.current.src = reader.result;
-      console.log(reader.result);
+      try {
+        const response = await fetch(`http://localhost:8080/users/${user.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...user,'image':reader.result}),
+        });
+    
+        const data = await response.json();
+        console.log('Updated user:', data);
+        
+      } catch (error) {
+        console.error('Error updating profile picture:', error);
+       
+      }
+      
     };
     reader.readAsDataURL(image[0]);
+
+        
+      
 
   };
 

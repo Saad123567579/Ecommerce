@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import {useSelector,useDispatch} from "react-redux";
 import { createUserAsync } from "./features/auth/authSlice";
 import {useNavigate} from "react-router";
+import {Link} from "react-router-dom";
 import { refresh,storeUser ,logger} from "./features/auth/authSlice";
 
 const Signup = () => {
@@ -166,6 +167,7 @@ const Signup = () => {
               </button>
             </div>
           </form>
+          <p>Already a user?<Link to="/login">Login</Link></p>
         </div>
       </div>
     </>

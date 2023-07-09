@@ -5,6 +5,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { refresh,storeUser,logger } from './features/auth/authSlice';
+import {Link} from "react-router-dom";
 
 import {
   Bars3Icon,
@@ -12,13 +13,12 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import Cart from "./features/cart/Cart";
-import {Link} from "react-router-dom";
 
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
+  { name: "Dashboard", to: "/", current: true },
+  { name: "Team", to: "/", current: false },
+  { name: "Projects", to: "/", current: false },
+  { name: "Calendar", to: "/", current: false },
 ];
 
 function classNames(...classes) {
@@ -89,9 +89,9 @@ export default function Navbar() {
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
-                          href={item.href}
+                          to={item.to}
                           className={classNames(
                             item.current
                               ? "bg-gray-900 text-white"
@@ -101,7 +101,7 @@ export default function Navbar() {
                           aria-current={item.current ? "page" : undefined}
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
