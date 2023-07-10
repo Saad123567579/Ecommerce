@@ -20,6 +20,10 @@ import Contact from "./Contact";
 import Notfound from "./Notfound";
 import Success from "./Success";
 import Tracking from "./Tracking";
+import Orders from "./admin/Orders";
+import Admin from "./admin/Admin";
+import Stock from "./admin/Stock";
+import Newproduct from "./admin/Newproduct";
 
 function App() {
   const dispatch = useDispatch();
@@ -63,16 +67,22 @@ function App() {
         <Navbar />
         <div className="container">
           <Routes>
-            <Route path="/" element={<Productlist />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/product/:id" element={<Productview />} />
-            <Route path="/profile/:username" element={<Profile />} />
-            <Route  path="/checkout" element={<Checkout />}  />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/success/:id" element={<Success />} />
-            <Route path="/tracking" element={<Tracking />} />
+            <Route exact  path="/" element={<Productlist />} />
+            <Route exact  path="/about" element={<About />} />
+            <Route exact  path="/contact" element={<Contact />} />
+            <Route exact  path="/product/:id" element={<Productview />} />
+            <Route exact  path="/profile/:username" element={<Profile />} />
+            <Route exact   path="/checkout" element={<Checkout />}  />
+            <Route exact  path="/login" element={<Login />} />
+            <Route exact  path="/signup" element={<Signup />} />
+            <Route  exact path="/success/:id" element={<Success />} />
+            <Route exact  path="/tracking" element={<Tracking />} />
+            <Route exact  path="/getmetoadmin" element={<Admin />} />
+            <Route exact  path="/getmetoadmin/orders" element={<Orders />} />
+            <Route exact  path="/getmetoadmin/stock" element={<Stock />} />
+            <Route exact  path="/getmetoadmin/newproduct" element={<Newproduct />} />
+
+
 
 
             <Route path="*" element={<Notfound/>} />
