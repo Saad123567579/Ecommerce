@@ -18,6 +18,8 @@ import SignatureRoute from "./SignatureRoute";
 import About from "./About";
 import Contact from "./Contact";
 import Notfound from "./Notfound";
+import Success from "./Success";
+import Tracking from "./Tracking";
 
 function App() {
   const dispatch = useDispatch();
@@ -64,18 +66,15 @@ function App() {
             <Route path="/" element={<Productlist />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-
-
-            
             <Route path="/product/:id" element={<Productview />} />
             <Route path="/profile/:username" element={<Profile />} />
-            <Route element={<ProtectedRoute />}>
             <Route  path="/checkout" element={<Checkout />}  />
-            </Route>
-            <Route element={<SignatureRoute />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            </Route>
+            <Route path="/success/:id" element={<Success />} />
+            <Route path="/tracking" element={<Tracking />} />
+
+
             <Route path="*" element={<Notfound/>} />
 
 

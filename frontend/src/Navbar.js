@@ -14,17 +14,29 @@ import {
 } from "@heroicons/react/24/outline";
 import Cart from "./features/cart/Cart";
 
-const navigation = [
-  { name: "Home", to: "/", current: true },
-  { name: "About", to: "/about", current: false },
-  { name: "Contact", to: "/contact", current: false },
-  { name: "Calendar", to: "/", current: false },
-];
+
+
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function Navbar() {
+  var navigation = [
+    { name: "Home", to: "/", current: window.location.href == "http://localhost:3000/" },
+    { name: "About", to: "/about", current: window.location.href == "http://localhost:3000/about" },
+    { name: "Contact", to: "/contact", current: window.location.href == "http://localhost:3000/contact" },
+    { name: "Track Order", to: "/tracking", current: window.location.href == "http://localhost:3000/tracking" },
+  ];
+  useEffect(() => {
+    navigation = [
+      { name: "Home", to: "/", current: window.location.href == "http://localhost:3000/" },
+      { name: "About", to: "/about", current: window.location.href == "http://localhost:3000/about" },
+      { name: "Contact", to: "/contact", current: window.location.href == "http://localhost:3000/contact" },
+      { name: "Track Order", to: "/tracking", current: window.location.href == "http://localhost:3000/tracking" },
+    ];
+    
+  }, [window.Location.href])
   const dispatch = useDispatch();
   var refresh = useSelector((state) => state.user.refresh);
   var user = useSelector((state)=>state.user.currentUser);

@@ -440,14 +440,14 @@ export default function Productlist() {
                     </h2>
 
                     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                      {products.map((product) => (
+                      {products.map((product) => ( product &&
                         <div
                           key={product.id}
                           className="max-w-xs mx-auto mb-8 bg-white rounded-md overflow-hidden shadow-lg"
                         >
                           <div className="relative">
                             <img
-                              src={product.images[0]}
+                              src={product.thumbnail}
                               alt={product.title}
                               className="object-cover w-full h-64 sm:h-48 md:h-64 lg:h-56 xl:h-64"
                             />
@@ -520,14 +520,14 @@ export default function Productlist() {
                         </div>
                       ))}
 
-                      {products.map((product) => (
+                      {products.map((product) => ( product &&
                         <div
-                          key={product.id - 1}
+                          key={product.id + 1000}
                           className="max-w-xs mx-auto mb-8 bg-white rounded-md overflow-hidden shadow-lg"
                         >
                           <div className="relative">
                             <img
-                              src={product.images[0]}
+                              src={product.thumbnail}
                               alt={product.title}
                               className="object-cover w-full h-64 sm:h-48 md:h-64 lg:h-56 xl:h-64"
                             />

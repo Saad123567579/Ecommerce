@@ -1,9 +1,10 @@
-import {Outlet,Navigate} from'react-router';
+import { Outlet, Navigate, Route } from 'react-router-dom';
 import Signup from './Signup';
-import {useDispatch,useSelector} from "react-redux";
+import { useSelector } from 'react-redux';
 
 const SignatureRoute = () => {
-    const logger = useSelector(state=>state.user.logger);
-    return logger===1?<Outlet/>:<Navigate to="/" />
-}
+  const logger = useSelector((state) => state.user.logger);
+  return logger === 1 ? <Outlet /> : <Navigate to="/" />;
+};
+
 export default SignatureRoute;

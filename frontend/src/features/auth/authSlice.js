@@ -6,7 +6,8 @@ const initialState = {
     flag:1,
     refresh:1,
     currentUser:{},
-    logger:0
+    logger:0,
+    order:{}
   };
 
   export  const createUserAsync = createAsyncThunk(
@@ -75,6 +76,9 @@ const initialState = {
       logger: (state,action) => {
         state.logger = action.payload;
       },
+      order: (state,action) => {
+        state.order = action.payload;
+      },
       
     },
     
@@ -107,5 +111,5 @@ const initialState = {
     },
   });
   
-  export const  { increment,refresh,storeUser,logger} = userSlice.actions;
+  export const  { increment,refresh,storeUser,logger,order} = userSlice.actions;
   export default userSlice.reducer;

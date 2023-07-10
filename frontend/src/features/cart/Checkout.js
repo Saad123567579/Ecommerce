@@ -7,13 +7,41 @@ import { increment } from "../productlist/Productlistslice";
 const Checkout = () => {
     const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-
-  const onSubmit = (data) => {
-    // Handle form submission logic here
-    console.log(data);
-  };
   const dispatch = useDispatch();
   let val = useSelector((state) => state.product.flag);
+
+  const onSubmit = async(data) => {
+    let username = JSON.parse(localStorage.getItem("token"));
+    let items = JSON.parse(localStorage.getItem("cartItems")).items;
+    let total = items.reduce((accumulator, item) => accumulator + (item.price * item.quantity), 0);
+
+    data = {...data,"username":username,"items":items,"total":total,"status":"Processing"};
+
+    try {
+      const response = await fetch('http://localhost:8080/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error creating order');
+      }
+  
+      const result = await response.json();
+      console.log('Order created:', result);
+      
+      let update = {"items":[]};
+      localStorage.setItem("cartItems",JSON.stringify(update));
+      // dispatch(increment());
+      window.location.href = `/success/${result.id}`;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
 
   let products = [];
 
@@ -22,10 +50,8 @@ const Checkout = () => {
     products = JSON.parse(localStorage.getItem("cartItems")).items;
    
   }, [val]);
+  
 
-//   const handleClick = () => {
-//     props.setvisibility(false);
-//   };
   const handleRemoveClick = (event) => {
     let id = event.target.getAttribute("id");
     let ls = JSON.parse(localStorage.getItem("cartItems"));
