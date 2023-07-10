@@ -1,6 +1,4 @@
-
 //app.js
-
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
@@ -17,6 +15,9 @@ import { updateUserAsync,logger } from "./features/auth/authSlice";
 import {useDispatch,useSelector} from "react-redux";
 import ProtectedRoute from "./ProtectedRoute";
 import SignatureRoute from "./SignatureRoute";
+import About from "./About";
+import Contact from "./Contact";
+import Notfound from "./Notfound";
 
 function App() {
   const dispatch = useDispatch();
@@ -61,6 +62,10 @@ function App() {
         <div className="container">
           <Routes>
             <Route path="/" element={<Productlist />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+
+
             
             <Route path="/product/:id" element={<Productview />} />
             <Route path="/profile/:username" element={<Profile />} />
@@ -71,6 +76,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             </Route>
+            <Route path="*" element={<Notfound/>} />
+
 
 
         

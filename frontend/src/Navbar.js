@@ -15,9 +15,9 @@ import {
 import Cart from "./features/cart/Cart";
 
 const navigation = [
-  { name: "Dashboard", to: "/", current: true },
-  { name: "Team", to: "/", current: false },
-  { name: "Projects", to: "/", current: false },
+  { name: "Home", to: "/", current: true },
+  { name: "About", to: "/about", current: false },
+  { name: "Contact", to: "/contact", current: false },
   { name: "Calendar", to: "/", current: false },
 ];
 
