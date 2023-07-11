@@ -401,7 +401,7 @@ export default function Productlist() {
                           <div className="space-y-4">
                             {section.options.map((option, optionIdx) => (
                               <div
-                                key={option.value}
+                              
                                 className="flex items-center"
                               >
                                 <input
