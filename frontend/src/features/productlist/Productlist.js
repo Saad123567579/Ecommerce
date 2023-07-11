@@ -16,79 +16,118 @@ function classNames(...classes) {
 }
 
 export default function Productlist() {
+  const [query,setquery] = useState({"categories":[],"brands":[],"sort":[]});
+  const [cat,setcat] = useState([]);
+  const [br,setbr] = useState([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   var products = useSelector((state) => state.product.products);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchAllProductsAsync());
+    dispatch(fetchAllProductsAsync(query));
+    console.log(query);
+    
+  }, [query])
+
+  useEffect(() => {
+    dispatch(fetchAllProductsAsync(query));
   }, []);
+  useEffect(() => {
+    if (products && products.length > 0) {
+      var uniqueCategories = new Set();
+      var uniqueBrands = new Set();
+      for (const product of products) {
+        uniqueCategories.add(product.category);
+        uniqueBrands.add(product.brand);
+      }
 
-  const sortOptions = [
-    { name: "Most Popular", href: "#", current: true },
-    { name: "Best Rating", href: "#", current: false },
-    { name: "Newest", href: "#", current: false },
-    { name: "Price: Low to High", href: "#", current: false },
-    { name: "Price: High to Low", href: "#", current: false },
-  ];
+      const Categories = Array.from(uniqueCategories);
+      const Brands = Array.from(uniqueBrands);
+      var categories = [];
+      var brands = [];
 
-  const subCategories = [
-    { name: "Totes", href: "#" },
-    { name: "Backpacks", href: "#" },
-    { name: "Travel Bags", href: "#" },
-    { name: "Hip Bags", href: "#" },
-    { name: "Laptop Sleeves", href: "#" },
-  ];
+      for (const c of Categories) {
+        let obj = { value: c, label: c, checked: false };
+        categories.push(obj);
+      }
+      for (const b of Brands) {
+        let obj = { value: b, label: b, checked: false };
+        brands.push(obj);
+      }
+
+      setcat(categories);
+      setbr(brands);
+    }
+  }, [products]);
+
+  if (!products || products.length === 0) {
+    return (<h1>Loading...</h1>);
+  }
   
+  const sortOptions = [
+    { name: "Best Rating", to: "/", current: false ,id:"sortrating" },
+    { name: "Price: Low to High", to: "/", current: false ,id:"sortprice1" },
+    { name: "Price: High to Low", to: "/", current: false ,id:"sortprice-1" },
+  ];
 
-  const filters = [
-    {
-      id: "color",
-      name: "Color",
-      options: [
-        { value: "white", label: "White", checked: false },
-        { value: "beige", label: "Beige", checked: false },
-        { value: "blue", label: "Blue", checked: true },
-        { value: "brown", label: "Brown", checked: false },
-        { value: "green", label: "Green", checked: false },
-        { value: "purple", label: "Purple", checked: false },
-      ],
-    },
+  var filters = [
     {
       id: "category",
       name: "Category",
-      options: [
-        { value: "new-arrivals", label: "New Arrivals", checked: false },
-        { value: "sale", label: "Sale", checked: false },
-        { value: "travel", label: "Travel", checked: true },
-        { value: "organization", label: "Organization", checked: false },
-        { value: "accessories", label: "Accessories", checked: false },
-      ],
+      options: [...cat],
     },
     {
-      id: "size",
-      name: "Size",
-      options: [
-        { value: "2l", label: "2L", checked: false },
-        { value: "6l", label: "6L", checked: false },
-        { value: "12l", label: "12L", checked: false },
-        { value: "18l", label: "18L", checked: false },
-        { value: "20l", label: "20L", checked: false },
-        { value: "40l", label: "40L", checked: true },
-      ],
+      id: "brand",
+      name: "Brand",
+      options: [...br],
     },
   ];
+  
+  const handleCheckBoxChange = (event) => {
+    const { name, value, checked } = event.target;
+    let c = [];
+    let b = [];
+  
+    if (filters) {
+      filters.forEach((section) => {
+        section.options.forEach((option) => {
+          if (option.value === value) {
+            option.checked = checked;
+          }
+        });
+      });
+  
+      filters[0]?.options.forEach((option) => {
+        if (option.checked === true) {
+          c.push(option.value);
+        }
+      });
+  
+      filters[1]?.options.forEach((option) => {
+        if (option.checked === true) {
+          option.checked = checked;
+          b.push(option.value);
+        }
+      });
+    }
+   if(b.length!=0)
+    setquery({ ...query, brands: b });
+   if(c.length!=0)
+    setquery({ ...query, categories: c }); 
 
+  };
+  
+  
   const handleClick = (event) => {
     let id = event.target.getAttribute('id');
     let product = {};
-    for(let i=0;i<=products.length;i++){
-      if(products[i].id == id){
+    for(let i=0;i<products.length;i++){
+      if(products[i].id === id){
         product = products[i];
         break;
       }
     }
-    
+
     let existingCartItems = JSON.parse(localStorage.getItem("cartItems"));
     let newItem = {
       "id": product.id,
@@ -167,26 +206,7 @@ export default function Productlist() {
                       <div className="mt-6 relative flex-1 px-4 sm:px-6">
                         {/* Filters */}
                         <form className="space-y-6">
-                          <div>
-                            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                              Categories
-                            </h3>
-                            <ul role="list" className="mt-3 space-y-1">
-                              {subCategories.map((category) => (
-                                <li
-                                  key={category.name}
-                                  className="px-2 py-1 text-base"
-                                >
-                                  <a
-                                    href={category.href}
-                                    className="text-gray-900"
-                                  >
-                                    {category.name}
-                                  </a>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
+                        
 
                           {filters.map((section) => (
                             <Disclosure
@@ -234,8 +254,9 @@ export default function Productlist() {
                                                 className="flex items-center"
                                               >
                                                 <input
+                                                  onChange={handleCheckBoxChange}
                                                   id={`${section.id}-${optionIdx}`}
-                                                  name={`${section.id}[]`}
+                                                  name={option.value}
                                                   defaultValue={option.value}
                                                   type="checkbox"
                                                   defaultChecked={
@@ -302,8 +323,11 @@ export default function Productlist() {
                       {sortOptions.map((option) => (
                         <Menu.Item key={option.name}>
                           {({ active }) => (
-                            <a
-                              href={option.href}
+                            <Link
+                              
+                              to={option.to}
+                              id={option.id}
+
                               className={classNames(
                                 active
                                   ? "bg-gray-100 text-gray-900"
@@ -312,7 +336,7 @@ export default function Productlist() {
                               )}
                             >
                               {option.name}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                       ))}
@@ -357,17 +381,7 @@ export default function Productlist() {
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
               <form className="hidden lg:block">
-                <h3 className="sr-only">Categories</h3>
-                <ul
-                  role="list"
-                  className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900"
-                >
-                  {subCategories.map((category) => (
-                    <li key={category.name}>
-                      <a href={category.href}>{category.name}</a>
-                    </li>
-                  ))}
-                </ul>
+                
 
                 {filters.map((section) => (
                   <Disclosure
@@ -406,9 +420,10 @@ export default function Productlist() {
                               >
                                 <input
                                   id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
+                                  name={option.value}
                                   defaultValue={option.value}
                                   type="checkbox"
+                                  onChange={handleCheckBoxChange}
                                   defaultChecked={option.checked}
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
@@ -440,6 +455,7 @@ export default function Productlist() {
                     </h2>
 
                     <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                      
                       {products.map((product) => ( product &&
                         <div
                           key={product.id}
