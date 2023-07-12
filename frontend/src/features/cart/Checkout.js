@@ -18,7 +18,7 @@ const Checkout = () => {
     data = {...data,"username":username,"items":items,"total":total,"status":"Processing"};
 
     try {
-      const response = await fetch('http://localhost:8080/orders', {
+      const response = await fetch('http://localhost:3001/orders/createorder', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const Checkout = () => {
       let update = {"items":[]};
       localStorage.setItem("cartItems",JSON.stringify(update));
       // dispatch(increment());
-      window.location.href = `/success/${result.id}`;
+      window.location.href = `/success/${result._id}`;
     } catch (error) {
       console.error('Error:', error);
     }

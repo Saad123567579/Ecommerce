@@ -1,23 +1,27 @@
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 
 const Tracking = () => {
-  const [searchId, setSearchId] = useState("");
+  const ref = useRef();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState("idle");
 
+
   const handleSearch = async (e) => {
     e.preventDefault();
+    console.log(e.target.value);
 
     try {
       setStatus("loading");
-      const response = await fetch(`http://localhost:8080/orders/${searchId}`);
+      let id = ref.current.value;
+      const response = await fetch(`http://localhost:3001/orders/getorderbyid/${id}`);
       if (!response.ok) {
         setStatus("failed");
         throw new Error("Order not found");
       }
 
       const data = await response.json();
+      console.log(data);
       setOrder(data);
       setStatus("fulfilled");
       setError(null);
@@ -34,8 +38,8 @@ const Tracking = () => {
         <div className="flex items-center">
           <input
             type="text"
-            value={searchId}
-            onChange={(e) => setSearchId(e.target.value)}
+            ref={ref}
+            
             placeholder="Enter order ID"
             className="border border-gray-300 px-3 py-2 mr-2 rounded-md w-64"
           />
@@ -54,7 +58,7 @@ const Tracking = () => {
 
       {status === "fulfilled" && order && (
         <div
-          key={order.id}
+          key={order._id}
           className="bg-white shadow-lg rounded-lg overflow-hidden"
         >
           <div className="p-6">

@@ -3,26 +3,22 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 function removeEmptyKeys(obj) {
-    // Filter out key-value pairs with empty values
-    const filteredEntries = Object.entries(obj).filter(([key, value]) => {
-      // Exclude empty values
-      return value !== "";
-    });
-  
-    // Convert the filtered entries back into an object
-    const filteredObj = Object.fromEntries(filteredEntries);
-  
-    return filteredObj;
-  }
+  // Filter out key-value pairs with empty values
+  const filteredEntries = Object.entries(obj).filter(([key, value]) => {
+    // Exclude empty values
+    return value !== "";
+  });
 
+  // Convert the filtered entries back into an object
+  const filteredObj = Object.fromEntries(filteredEntries);
+
+  return filteredObj;
+}
 
 const Admin = () => {
-   
   const [status, setStatus] = useState("idle");
-  const [focusproduct, setfocusproduct] = useState("idle");
-  const handleChange = (event) => {
-    
-  };
+  const [focusproduct, setfocusproduct] = useState(null);
+  const handleChange = (event) => {};
 
   const {
     register,
@@ -38,14 +34,16 @@ const Admin = () => {
   const toggleModal = async (event) => {
     setIsOpen(!isOpen);
     let id = event.target.getAttribute("id");
-    const response = await fetch(`http://localhost:8080/products/${id}`);
+    const response = await fetch(
+      `http://localhost:3001/products/getproductbyid/${id}`
+    );
     const data = await response.json();
     setfocusproduct(data);
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("http://localhost:8080/products");
+      const response = await fetch("http://localhost:3001/products/getproduct");
       const data = await response.json();
       setProducts(data);
     };
@@ -54,35 +52,73 @@ const Admin = () => {
   }, []);
 
   const onSubmit = async (data) => {
-    
+    let id = focusproduct.id;
+    console.log(id);
     data = removeEmptyKeys(data);
-    data = {...focusproduct ,...data};
-    try {setStatus("working");
-        const response = await fetch(`http://localhost:8080/products/${focusproduct.id}`, {
-          method: 'PUT',
+    data = { ...data };
+    console.log(data);
+    try {
+      setStatus("working");
+      const response = await fetch(
+        `http://localhost:3001/products/updateproductbyid/${id}`,
+        {
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-        });
-    
-        if (!response.ok) {        setStatus("failed");
-
-          throw new Error('Failed to update product.');
         }
-    
-        const Data = await response.json();
-        console.log('Product updated:', Data);
-        setStatus("success");
+      );
 
-        // Handle the updated product data here
-      } catch (error) {
-        console.error('Error:', error);
-        // Handle the error here
+      if (!response.ok) {
+        setStatus("failed");
+
+        throw new Error("Failed to update product.");
       }
-    
+
+      const Data = await response.json();
+      console.log("Product updated:", Data);
+      setStatus("success");
+
+      // Handle the updated product data here
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle the error here
+    }
   };
-  
+
+  const handleDelete = async(event) => {
+    let id = event.target.getAttribute('name');
+    try {
+      const response = await fetch(
+        `http://localhost:3001/products/deletebyid/${id}`,
+        {
+          method: "Delete",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update product.");
+      }
+
+      
+      window.location.href = "http://localhost:3000/getmetoadmin/stock";
+    
+
+      // Handle the updated product data here
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle the error here
+    }
+  }
+
+
+
+
 
   return (
     <>
@@ -143,6 +179,13 @@ const Admin = () => {
                     >
                       Edit
                     </button>
+                    <button
+                      name={product.id}
+                      onClick={handleDelete}
+                      className="mt-4 mx-2 bg-red-700 hover:bg-red-900 text-black font-semibold py-2 px-4 rounded"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               ))}
@@ -171,7 +214,6 @@ const Admin = () => {
                     Title
                   </label>
                   <input
-                    
                     valueholder={focusproduct.title}
                     {...register("title")}
                     type="text"
@@ -187,7 +229,6 @@ const Admin = () => {
                     Description
                   </label>
                   <textarea
-                    
                     valueholder={focusproduct.description}
                     {...register("description")}
                     id="description"
@@ -203,9 +244,8 @@ const Admin = () => {
                     Price
                   </label>
                   <input
-                    
                     valueholder={focusproduct.price}
-                    {...register("price", )}
+                    {...register("price")}
                     type="number"
                     id="price"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -219,9 +259,8 @@ const Admin = () => {
                     Discount Percentage
                   </label>
                   <input
-                    
                     valueholder={focusproduct.discountPercentage}
-                    {...register("discountPercentage", )}
+                    {...register("discountPercentage")}
                     type="text"
                     id="discountPercentage"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -235,9 +274,8 @@ const Admin = () => {
                     Rating
                   </label>
                   <input
-                    
                     valueholder={focusproduct.rating}
-                    {...register("rating", )}
+                    {...register("rating")}
                     type="text"
                     id="rating"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -251,9 +289,8 @@ const Admin = () => {
                     Stock
                   </label>
                   <input
-                    
                     valueholder={focusproduct.stock}
-                    {...register("stock", )}
+                    {...register("stock")}
                     type="number"
                     id="stock"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -267,9 +304,8 @@ const Admin = () => {
                     Brand
                   </label>
                   <input
-                    
                     valueholder={focusproduct.brand}
-                    {...register("brand", )}
+                    {...register("brand")}
                     type="text"
                     id="brand"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -283,9 +319,8 @@ const Admin = () => {
                     Category
                   </label>
                   <input
-                    
                     valueholder={focusproduct.category}
-                    {...register("category", )}
+                    {...register("category")}
                     type="text"
                     id="category"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -299,9 +334,8 @@ const Admin = () => {
                     Thumbnail
                   </label>
                   <input
-                    
                     valueholder={focusproduct.thumbnail}
-                    {...register("thumbnail", )}
+                    {...register("thumbnail")}
                     type="text"
                     id="thumbnail"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"

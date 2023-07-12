@@ -8,49 +8,51 @@ const Success = () => {
     const [info,setinfo] = useState(null);
     const {id} = useParams();
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`http://localhost:8080/orders/${id}`);
+        const fetchData = async () => { 
+            console.log(`http://localhost:3001/orders/getorderbyid/${id}`);
+            const response = await fetch(`http://localhost:3001/orders/getorderbyid/${id}`);
             const data = await response.json();
             setinfo(data);
+            console.log(info);
           };
           fetchData();
     }, [])
-    useEffect(() => {
-        console.log(info);
+    // useEffect(() => {
+    //     console.log(info);
       
-        const updateStockLevels = async () => {
-          try {
-            const updatedItems = info.items.map(async (product) => {
-              const getProductResponse = await fetch(`http://localhost:8080/products/${product.id}`);
-              const fetchedProduct = await getProductResponse.json();
-              const updatedStock = {...fetchedProduct,"stock":fetchedProduct.stock - product.quantity};
-              const updateProductResponse = await fetch(`http://localhost:8080/products/${product.id}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({  ...updatedStock }),
-              });
+        // const updateStockLevels = async () => {
+          // try {
+          //   const updatedItems = info.items.map(async (product) => {
+          //     const getProductResponse = await fetch(`http://localhost:8080/products/${product.id}`);
+          //     const fetchedProduct = await getProductResponse.json();
+          //     const updatedStock = {...fetchedProduct,"stock":fetchedProduct.stock - product.quantity};
+          //     const updateProductResponse = await fetch(`http://localhost:8080/products/${product.id}`, {
+          //       method: 'PUT',
+          //       headers: {
+          //         'Content-Type': 'application/json',
+          //       },
+          //       body: JSON.stringify({  ...updatedStock }),
+          //     });
       
-              if (!updateProductResponse.ok) {
-                throw new Error('Error updating stock levels');
-              }
+          //     if (!updateProductResponse.ok) {
+          //       throw new Error('Error updating stock levels');
+          //     }
       
-              const updatedProduct = await updateProductResponse.json();
-              return updatedProduct;
-            });
+          //     const updatedProduct = await updateProductResponse.json();
+          //     return updatedProduct;
+          //   });
       
-            const updatedItemsData = await Promise.all(updatedItems);
-            console.log('Updated stock levels:', updatedItemsData);
-          } catch (error) {
-            console.error('Error updating stock levels:', error);
-          }
-        };
+          //   const updatedItemsData = await Promise.all(updatedItems);
+          //   console.log('Updated stock levels:', updatedItemsData);
+          // } catch (error) {
+          //   console.error('Error updating stock levels:', error);
+          // }
+        // };
       
-        if (info && info.items) {
-          updateStockLevels();
-        }
-      }, [info]);
+      //   if (info && info.items) {
+      //     // updateStockLevels();
+      //   }
+      // }, [info]);
       
 
       if (!info) {
@@ -68,7 +70,7 @@ const Success = () => {
           <p className="text-gray-600 mb-4">Thank you for your order!</p>
           <div className="mb-4">
             <h2 className="text-lg font-semibold">Order Details</h2>
-            <p>Order ID: {id}</p>
+            <p>Order ID: {info._id}</p>
             <p>Name: {info.name}</p>
             <p>Email: {info.email}</p>
             <p>Address: {info.address}</p>

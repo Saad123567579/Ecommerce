@@ -18,7 +18,7 @@ const Newproduct = () => {
     console.log(formdata);
     try {
       setStatus("working");
-      const response = await fetch("http://localhost:8080/products", {
+      const response = await fetch("http://localhost:3001/products/createproduct", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

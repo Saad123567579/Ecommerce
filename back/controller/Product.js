@@ -14,9 +14,22 @@ exports.createProduct = (req, res) => {
     });
 };
 
-exports.deleteProduct = (req, res) => {
-  //delete a product
+exports.deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const response = await Product.findByIdAndDelete(id);
+
+    if (!response) {
+      return res.status(404).send("Could not find the product to delete");
+    }
+
+    res.status(200).send("Product successfully deleted");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
 
 exports.getProducts = async (req, res) => {
     const { category, brand } = req.query;
@@ -56,6 +69,24 @@ exports.getProductsById = async (req, res) => {
   }
 };
 
-exports.updateProduct = (req, res) => {
-  //update products
+exports.updateProductsById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const obj = req.body;
+    let product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).send("Product not found");
+    }
+
+    product = Object.assign(product, obj);
+
+    await product.save();
+
+    res.status(201).json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 };
+
