@@ -28,9 +28,18 @@ exports.createOrder = async(req, res) => {
 // };
 
 exports.getOrder = async (req, res) => {
+    console.log(req.query.userid)
     try{
-        const orders = await Order.find();
-    res.status(200).json(orders);
+        if(req.query.userid === undefined){
+          const orders = await Order.find();
+          res.status(200).json(orders);
+
+        } else {
+          const orders = await Order.find({'userid':req.query.userid});
+          res.status(200).json(orders);
+        }
+          
+       
     }
     catch(e){
         res.status(500).send("Some Error Occurred");

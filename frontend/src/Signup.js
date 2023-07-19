@@ -1,19 +1,17 @@
 //Signup.js
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {useSelector,useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { createUserAsync } from "./features/auth/authSlice";
-import {useNavigate} from "react-router";
-import {Link} from "react-router-dom";
-import { refresh,storeUser ,logger} from "./features/auth/authSlice";
+import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
+import { refresh, storeUser, logger } from "./features/auth/authSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
-  // var id;
-  // var val = useSelector(state=>state.user.flag);
-  // var status = useSelector((state) => state.user.status);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
 
   const {
     register,
@@ -21,27 +19,42 @@ const Signup = () => {
     watch,
     formState: { errors },
   } = useForm();
-  const onSubmit = async(data) => { 
-    data = {...data,"image":"https://blogtimenow.com/wp-content/uploads/2014/06/hide-facebook-profile-picture-notification.jpg"};
-    // console.log("BEFORE:",data.username)
-    let name = watch("username");
+  const onSubmit = async (data) => {
+    console.log(data);
+    data = {
+      ...data,
+      image:
+        "https://blogtimenow.com/wp-content/uploads/2014/06/hide-facebook-profile-picture-notification.jpg",
+    };
     let x = await dispatch(createUserAsync(data));
-    if(x.payload==1){
-      // console.log("AFTER:",name)
-      if(!localStorage.getItem("token")){
-        localStorage.setItem("token",JSON.stringify(name));
-        //save user here
-        dispatch(storeUser(data));
-        dispatch(logger(1));
-        navigate("/");
-      }
+    console.log(x.payload);
+    if (x.payload == "Sorry a user already exists with this email") {
+      toast.error(
+        "This email is already in use. Try another email or logging in",
+        {
+          position: toast.POSITION.TOP_RIGHT, // Position of the notification
+          autoClose: 3000, // Time in milliseconds after which the notification will be automatically closed
+          hideProgressBar: false, // Whether to show the progress bar
+          closeOnClick: true, // Whether to close the notification when clicked
+          pauseOnHover: true, // Whether to pause the autoClose timer when hovering over the notification
+          // Other options
+        }
+      );
+    } else {
+      toast.success("Account Created", {
+        position: toast.POSITION.TOP_RIGHT, // Position of the notification
+        autoClose: 3000, // Time in milliseconds after which the notification will be automatically closed
+        hideProgressBar: false, // Whether to show the progress bar
+        closeOnClick: true, // Whether to close the notification when clicked
+        pauseOnHover: true, // Whether to pause the autoClose timer when hovering over the notification
+        // Other options
+      });
+      dispatch(refresh());
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1000);
     }
-    dispatch(refresh());
-    }
-   
-
-
-  
+  };
 
   return (
     <>
@@ -65,20 +78,20 @@ const Signup = () => {
           >
             <div>
               <label
-                htmlFor="username"
+                htmlFor="name"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 UserName
               </label>
               <div className="mt-2">
                 <input
-                  {...register("username", {
+                  {...register("name", {
                     required: true,
                     minLength: 3,
                     maxLength: 20,
                   })}
-                  id="username"
-                  name="username"
+                  id="name"
+                  name="name"
                   type="text"
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -167,7 +180,9 @@ const Signup = () => {
               </button>
             </div>
           </form>
-          <p>Already a user?<Link to="/login">Login</Link></p>
+          <p>
+            Already a user?<Link to="/login">Login</Link>
+          </p>
         </div>
       </div>
     </>

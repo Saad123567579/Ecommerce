@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchAllProductsAsync, increment } from "./Productlistslice";
-
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Link } from "react-router-dom";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -63,6 +64,14 @@ export default function Productview() {
     localStorage.setItem("cartItems", updatedArrayString);
 
     dispatch(increment());
+    toast.success('Product Added To Cart', {
+      position: toast.POSITION.TOP_RIGHT, // Position of the notification
+      autoClose: 5000, // Time in milliseconds after which the notification will be automatically closed
+      hideProgressBar: false, // Whether to show the progress bar
+      closeOnClick: true, // Whether to close the notification when clicked
+      pauseOnHover: true, // Whether to pause the autoClose timer when hovering over the notification
+      // Other options
+    });
   };
 
   

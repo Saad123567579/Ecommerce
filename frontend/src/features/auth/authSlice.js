@@ -7,27 +7,28 @@ const initialState = {
     refresh:1,
     currentUser:{},
     logger:0,
-    order:{}
+    order:{},
+    user:{}
   };
 
   export  const createUserAsync = createAsyncThunk(
     'user/createUser',
     async (userObject) => {
         try {
-            const response = await fetch("http://localhost:8080/users", {
+            const response = await fetch("http://localhost:3001/users/createuser", {
               method: 'POST',
+              credentials:'include',
               headers: {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(userObject)
             });
+          
         
-            const newPerson = await response.json();
-            console.log("Your User Has Been Saved: ",newPerson);
-            return 1;
+            var newPerson = await response.json();
+            return newPerson;
           } catch (error) {
-            console.error("error in saving the user");
-            return 0;
+            return newPerson;
           }
         
     }
@@ -79,6 +80,12 @@ const initialState = {
       order: (state,action) => {
         state.order = action.payload;
       },
+      loginUser:(state,action)=>{
+        state.user = {...action.payload};
+      },
+      logoutUser:(state,action)=>{
+        state.user = {};
+      }
       
     },
     
@@ -111,5 +118,5 @@ const initialState = {
     },
   });
   
-  export const  { increment,refresh,storeUser,logger,order} = userSlice.actions;
+  export const  { increment,refresh,storeUser,logger,order,loginUser,logoutUser} = userSlice.actions;
   export default userSlice.reducer;

@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import Productview from "./features/productlist/Productview";
 import Checkout from "./features/cart/Checkout";
 import Profile from "./Profile";
-import { updateUserAsync,logger } from "./features/auth/authSlice";
+import { updateUserAsync,logger,loginUser,logoutUser } from "./features/auth/authSlice";
 import {useDispatch,useSelector} from "react-redux";
 import ProtectedRoute from "./ProtectedRoute";
 import SignatureRoute from "./SignatureRoute";
@@ -24,6 +24,9 @@ import Orders from "./admin/Orders";
 import Admin from "./admin/Admin";
 import Stock from "./admin/Stock";
 import Newproduct from "./admin/Newproduct";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -34,6 +37,25 @@ function App() {
       localStorage.setItem("cartItems", JSON.stringify({ items: [] }));
     }
   }, []);
+  var user = useSelector((state)=>state.user.user.user)
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await fetch("http://localhost:3001/users/getuser", {
+          credentials: 'include', // Include cookies in the request
+        });
+        const data = await response.json();
+        if(data==="Token Not Found"){console.log('token not found');} else {
+          dispatch(loginUser(data));}
+        
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    
+    checkToken();
+    
+  }, [ ])
 
 
   useEffect(()=>{
@@ -45,10 +67,10 @@ function App() {
   useEffect(() => {
     dispatch(updateUserAsync());
   }, [refresh])
-  useEffect(() => {
-    console.log("Hello World");
-    dispatch(updateUserAsync());
-  }, [])
+
+  
+
+
 
   const ProtectedRoute = ({ element: Element, ...rest }) => {
   const logger = useSelector((state) => state.user.logger);
@@ -65,6 +87,7 @@ function App() {
     <>
       <BrowserRouter>
         <Navbar />
+        < ToastContainer />
         <div className="container">
           <Routes>
             <Route exact  path="/" element={<Productlist />} />

@@ -1,6 +1,7 @@
 import React, { useState, Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import {  toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   XMarkIcon,
@@ -146,6 +147,14 @@ export default function Productlist() {
     let updatedArrayString = JSON.stringify(existingCartItems);
     localStorage.setItem("cartItems", updatedArrayString);
     dispatch(increment());
+    toast.success('Product Added To Cart', {
+      position: toast.POSITION.TOP_RIGHT, // Position of the notification
+      autoClose: 5000, // Time in milliseconds after which the notification will be automatically closed
+      hideProgressBar: false, // Whether to show the progress bar
+      closeOnClick: true, // Whether to close the notification when clicked
+      pauseOnHover: true, // Whether to pause the autoClose timer when hovering over the notification
+      // Other options
+    });
   };
 
   return (

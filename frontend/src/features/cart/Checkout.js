@@ -9,13 +9,16 @@ const Checkout = () => {
   const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
   let val = useSelector((state) => state.product.flag);
+  var user_id = useSelector((state)=>state.user.user.user._id);
+  console.log(user_id);
 
   const onSubmit = async(data) => {
-    let username = JSON.parse(localStorage.getItem("token"));
+
     let items = JSON.parse(localStorage.getItem("cartItems")).items;
     let total = items.reduce((accumulator, item) => accumulator + (item.price * item.quantity), 0);
 
-    data = {...data,"username":username,"items":items,"total":total,"status":"Processing"};
+    data = {...data,"items":items,"total":total,"status":"Processing","userid":user_id};
+    console.log(data);
 
     try {
       const response = await fetch('http://localhost:3001/orders/createorder', {

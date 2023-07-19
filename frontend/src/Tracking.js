@@ -63,7 +63,7 @@ const Tracking = () => {
         >
           <div className="p-6">
             <div className="flex justify-between mb-4">
-              <h2 className="text-lg font-semibold">Order ID: {order.id}</h2>
+              <h2 className="text-lg font-semibold">Order ID: {order._id}</h2>
               <p className="text-gray-600">Total: ${order.total}</p>
             </div>
             <div className="mb-4">
@@ -87,6 +87,8 @@ const Tracking = () => {
                 <h4 className="text-lg font-medium mb-2">Shipping Address</h4>
                 <p>{order.address}</p>
                 <p>{order.city}</p>
+                <p>{order.status}</p>
+
               </div>
             </div>
           </div>

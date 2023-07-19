@@ -4,8 +4,14 @@ import { Fragment, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { refresh,storeUser,logger } from './features/auth/authSlice';
-import {Link} from "react-router-dom";
+import {
+  refresh,
+  storeUser,
+  logger,
+  loginUser,
+  logoutUser,
+} from "./features/auth/authSlice";
+import { Link } from "react-router-dom";
 
 import {
   Bars3Icon,
@@ -14,42 +20,69 @@ import {
 } from "@heroicons/react/24/outline";
 import Cart from "./features/cart/Cart";
 
-
-
-
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function Navbar() {
   var navigation = [
-    { name: "Home", to: "/", current: window.location.href == "http://localhost:3000/" },
-    { name: "About", to: "/about", current: window.location.href == "http://localhost:3000/about" },
-    { name: "Contact", to: "/contact", current: window.location.href == "http://localhost:3000/contact" },
-    { name: "Track Order", to: "/tracking", current: window.location.href == "http://localhost:3000/tracking" },
+    {
+      name: "Home",
+      to: "/",
+      current: window.location.href == "http://localhost:3000/",
+    },
+    {
+      name: "About",
+      to: "/about",
+      current: window.location.href == "http://localhost:3000/about",
+    },
+    {
+      name: "Contact",
+      to: "/contact",
+      current: window.location.href == "http://localhost:3000/contact",
+    },
+    {
+      name: "Track Order",
+      to: "/tracking",
+      current: window.location.href == "http://localhost:3000/tracking",
+    },
   ];
   useEffect(() => {
     navigation = [
-      { name: "Home", to: "/", current: window.location.href == "http://localhost:3000/" },
-      { name: "About", to: "/about", current: window.location.href == "http://localhost:3000/about" },
-      { name: "Contact", to: "/contact", current: window.location.href == "http://localhost:3000/contact" },
-      { name: "Track Order", to: "/tracking", current: window.location.href == "http://localhost:3000/tracking" },
+      {
+        name: "Home",
+        to: "/",
+        current: window.location.href == "http://localhost:3000/",
+      },
+      {
+        name: "About",
+        to: "/about",
+        current: window.location.href == "http://localhost:3000/about",
+      },
+      {
+        name: "Contact",
+        to: "/contact",
+        current: window.location.href == "http://localhost:3000/contact",
+      },
+      {
+        name: "Track Order",
+        to: "/tracking",
+        current: window.location.href == "http://localhost:3000/tracking",
+      },
     ];
-    
-  }, [window.Location.href])
+  }, [window.Location.href]);
+
   const dispatch = useDispatch();
-  var refresh = useSelector((state) => state.user.refresh);
-  var user = useSelector((state)=>state.user.currentUser);
-  var logger = useSelector((state)=>state.user.logger);
-  const [name, setName] = useState('');
-  const [image, setimage] = useState('');
+  var u = useSelector((state) => state.user.user.user);
+
   useEffect(() => {
-    if(user){
-    setName(user.username);
-    setimage(user.image);
-    }
-  }, [refresh,user])
-  
+    console.log("u", u);
+  }, [u]);
+
+  var refresh = useSelector((state) => state.user.refresh);
+  var logger = useSelector((state) => state.user.logger);
+  const [name, setName] = useState("");
+  const [image, setimage] = useState("");
+
   let products = JSON.parse(localStorage.getItem("cartItems")).items;
   let val = useSelector((state) => state.product.flag);
   useEffect(() => {
@@ -61,12 +94,23 @@ export default function Navbar() {
   const handleClick = () => {
     setvisibility(true);
   };
-  const handleSignout = () => {
-    localStorage.removeItem("token");
-    dispatch(storeUser({}));
-    dispatch(refresh());
-    dispatch(logger(0));
-  }
+  const handleSignout = async () => {
+    dispatch(logoutUser());
+    const response = await fetch("http://localhost:3001/users/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      credentials: "include",
+    });
+    const data = await response.json();
+    console.log(data);
+
+    // dispatch(storeUser({}));
+    // dispatch(refresh());
+    // dispatch(logger(0));
+  };
   return (
     <>
       <Disclosure as="nav" className="bg-gray-800 sticky">
@@ -89,12 +133,12 @@ export default function Navbar() {
                   <div className="flex flex-shrink-0 items-center">
                     <img
                       className="block h-8 w-auto lg:hidden"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                      src=""
                       alt="Your Company"
                     />
                     <img
                       className="hidden h-8 w-auto lg:block"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                      src=""
                       alt="Your Company"
                     />
                   </div>
@@ -132,24 +176,24 @@ export default function Navbar() {
                       />
 
                       <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white rounded-full h-5 w-5 flex items-center justify-center">
-                        {products.length === 0 ? (
-                          <h3>{str}</h3>
-                        ) : (
-                          <h3>{products.length}</h3>
-                        )}
+                        {products ? <h3>{products.length}</h3>:<h3>{str}</h3>  }
                       </div>
                     </div>
                   </button>
 
                   {/* Profile dropdown */}
-                  {logger===1 ? (
+                  {u && (
                     <Menu as="div" className="relative ml-3">
                       <div>
                         <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={image}
+                            src={
+                              u
+                                ? u.image
+                                : "https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                            }
                             alt="no image"
                           />
                         </Menu.Button>
@@ -167,20 +211,20 @@ export default function Navbar() {
                           <Menu.Item>
                             {({ active }) => (
                               <Link
-                                to={`/profile/${encodeURIComponent(name)}`}
+                                to={`/profile/${u._id}`}
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
                               >
-                               {name} Profile
+                                {name} Profile
                               </Link>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a 
-                                onClick = {handleSignout}
+                              <a
+                                onClick={handleSignout}
                                 href="/"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
@@ -194,14 +238,19 @@ export default function Navbar() {
                         </Menu.Items>
                       </Transition>
                     </Menu>
-                  ) : (
+                  )}
+                  {!u && (
                     <Menu as="div" className="relative ml-3">
                       <div>
                         <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                           <span className="sr-only">Open user menu</span>
                           <img
                             className="h-8 w-8 rounded-full"
-                            src={image}
+                            src={
+                              u
+                                ? u.image
+                                : "https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                            }
                             alt="no image"
                           />
                         </Menu.Button>
@@ -242,7 +291,6 @@ export default function Navbar() {
                               </Link>
                             )}
                           </Menu.Item>
-                          
                         </Menu.Items>
                       </Transition>
                     </Menu>

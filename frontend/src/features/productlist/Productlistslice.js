@@ -37,7 +37,6 @@ export const fetchAllProductsAsync = createAsyncThunk(
     console.log(`http://localhost:3001/products/getproduct?${queryString}`);
     const response = await fetch(`http://localhost:3001/products/getproduct?${queryString}`);
     const data = await response.json();
-    console.log(data);
 
     return data;
   }

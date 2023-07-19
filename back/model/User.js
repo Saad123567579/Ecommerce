@@ -5,11 +5,25 @@ const userSchema = new Schema({
     name:{type:String},
     email:{type:String},
     password:{type:String},
-    token:{type:String}
+    image:{type:String}
 
 
 })
 
-exports.User = mongoose.model('User',userSchema);
+module.exports = mongoose.model('User',userSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
