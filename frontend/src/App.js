@@ -84,7 +84,7 @@ function App() {
 
   
   return (
-    <>
+  
       <BrowserRouter>
         <Navbar />
         < ToastContainer />
@@ -122,7 +122,7 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
-    </>
+    
   );
 }
 
